@@ -5,10 +5,13 @@ from dotenv import load_dotenv
 from tools.webSearch import BaiduWebSearch
 from tools.dataTool import DateTool
 from tools.fileTool import FileTool
+from tools.browserTool import BrowserTool
 from agno.tools.baidusearch import BaiduSearchTools
 from tools.visionTool import VisionTool
 from agno.db.sqlite import SqliteDb
 from agno.memory import MemoryManager
+
+from uuid import uuid4
 
 import os
 
@@ -29,17 +32,17 @@ memory_manager = MemoryManager(
 
 
 agent = Agent(
-    tools=[BaiduSearchTools(),DateTool(),FileTool(),VisionTool()],
+    tools=[BaiduSearchTools(), DateTool(), FileTool(), VisionTool(), BrowserTool()],
     db = db,
     memory_manager=memory_manager,
     update_memory_on_run=True,
     add_memories_to_context=True,
     model=OpenAILike(
         id="qwen3.6-plus",
-        api_key=os.getenv("DSAHSCOPE_API_KEY"),
-        base_url=os.getenv("DSAHSCOPE_API_URL"),
+        api_key=os.getenv("DASHSCOPE_API_KEY"),
+        base_url=os.getenv("DASHSCOPE_API_URL"),
         cache_response=True,
     ),
     instructions="你是一个回答快速的助手，请尽可能的简洁的回答问题，不需要思考太多。",
 )
-agent.print_response("你还记得我是谁吗", stream=True)
+agent.print_response("你好", session_id=str(uuid4()), stream=True)
